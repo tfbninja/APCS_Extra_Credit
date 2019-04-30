@@ -1,7 +1,5 @@
 package tim_cipher;
 
-import java.util.*;
-
 /**
  *
  * @author Tim Barber
@@ -10,9 +8,10 @@ public class Tim_Cipher {
 
     public static void main(String[] args) {
         System.out.println("Tim Barber\tApr 29, 2019\tAPCS"); //Header
-        Vigenere v = new Vigenere("bigfoot");
-        System.out.println(v.encode("heyo mayo"));
-        System.out.println(v.decode(v.encode("heyo mayo")));
+        Vigenere v = new Vigenere("oi mate");
+        String phrase = "The quick brown fox jumped over the lazy dog.";
+        System.out.println(v.encode(phrase));
+        System.out.println(v.decode(v.encode(phrase)).equals(phrase) ? "\nVerified." : ("diff:\n" + v.decode(v.encode(phrase)).equals(phrase)));
     }
 }
 

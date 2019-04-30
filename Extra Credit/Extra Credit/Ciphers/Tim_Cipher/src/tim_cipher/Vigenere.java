@@ -9,7 +9,7 @@ public class Vigenere extends Cipher {
     private String pw;
 
     public Vigenere(String pass) {
-        pw = pass;
+        pw = pass.toLowerCase();
     }
 
     public String getPw() {
@@ -17,30 +17,64 @@ public class Vigenere extends Cipher {
     }
 
     public void setPw(String pw) {
-        this.pw = pw;
+        this.pw = pw.toLowerCase();
     }
 
     @Override
     public String encode(String text) {
         int pw_Index = 0;
-        String out = text;
+        String out = "";
         for (int i = 0; i < text.length(); i++) {
-            out = out.substring(0, i) + (Character.getNumericValue(out.charAt(i)) + Character.getNumericValue(pw.charAt(pw_Index))) + (i < out.length() - 1 ? out.substring(i + 1) : String.valueOf(out.charAt(i)));
-            if (++pw_Index > pw.length()) {
-                pw_Index = 0;
+            if ((int) text.charAt(i) >= 65 && (int) text.charAt(i) <= 90 || ((int) text.charAt(i) >= 97) && (int) text.charAt(i) <= 122) {
+                int n = (int) text.charAt(i);
+                boolean low = n >= 97;
+                n -= low ? 97 : 65;
+                n += 26 * 5;
+                n %= 26;
+                int p = (int) pw.charAt(pw_Index);
+                p -= p >= 97 ? 97 : 65;
+                p += 26 * 5;
+                p %= 26;
+                n += p;
+                n %= 26;
+                n += (low ? 97 : 65);
+                out += String.valueOf((char) n);
+                if (++pw_Index > pw.length() - 1) {
+                    pw_Index = 0;
+                }
+            } else {
+                out += String.valueOf(text.charAt(i));
             }
         }
+
         return out;
     }
 
     @Override
     public String decode(String text) {
         int pw_Index = 0;
-        String out = text;
+        String out = "";
         for (int i = 0; i < text.length(); i++) {
-            out = out.substring(0, i) + (Character.getNumericValue(out.charAt(i)) - Character.getNumericValue(pw.charAt(pw_Index))) + (i < out.length() - 1 ? out.substring(i + 1) : String.valueOf(out.charAt(i)));
-            if (++pw_Index > pw.length()) {
-                pw_Index = 0;
+            if ((int) text.charAt(i) >= 65 && (int) text.charAt(i) <= 90 || ((int) text.charAt(i) >= 97) && (int) text.charAt(i) <= 122) {
+                int n = (int) text.charAt(i);
+                boolean low = n >= 97;
+                n -= low ? 97 : 65;
+                n += 26 * 5;
+                n %= 26;
+                int p = (int) pw.charAt(pw_Index);
+                p -= p >= 97 ? 97 : 65;
+                p += 26 * 5;
+                p %= 26;
+                n -= p;
+                n += 26;
+                n %= 26;
+                n += low ? 97 : 65;
+                out += String.valueOf((char) n);
+                if (++pw_Index > pw.length() - 1) {
+                    pw_Index = 0;
+                }
+            } else {
+                out += String.valueOf(text.charAt(i));
             }
         }
         return out;
